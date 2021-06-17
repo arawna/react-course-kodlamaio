@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Icon, Label, Menu, Table } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Icon, Label, Menu, Table, Button } from "semantic-ui-react";
 import ProductService from "../services/productService";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/actions/cartActions";
+import { toast } from "react-toastify";
 
 export default function ProductsList() {
+
+  const dispatch = useDispatch()
 
   const [products, setProducts] = useState([])
 
@@ -10,6 +16,11 @@ export default function ProductsList() {
     let productService=new ProductService()
     productService.getProducts().then(result=>setProducts(result.data.data))
   },[])
+
+  const handleAddToCart=(product)=>{
+    dispatch(addToCart(product))
+    toast.success(`${product.productName} sepete eklendi!`)
+  }
 
   return (
     <div>
@@ -21,6 +32,7 @@ export default function ProductsList() {
             <Table.HeaderCell>Stok Adeti</Table.HeaderCell>
             <Table.HeaderCell>Açıklama</Table.HeaderCell>
             <Table.HeaderCell>Kategori</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -28,11 +40,16 @@ export default function ProductsList() {
           {
             products.map(product=>(
               <Table.Row key={product.id}>
-                <Table.Cell>{product.productName}</Table.Cell>
+                <Table.Cell><Link to={`/products/${product.productName}`}>{product.productName}</Link></Table.Cell>
                 <Table.Cell>{product.unitPrice}</Table.Cell>
                 <Table.Cell>{product.unitsInStock}</Table.Cell>
                 <Table.Cell>{product.quantityPerUnit}</Table.Cell>
                 <Table.Cell>{product.category.categoryName}</Table.Cell>
+                <Table.Cell>
+                  <Button onClick={()=>handleAddToCart(product)}>
+                    Sepete ekle
+                  </Button>
+                </Table.Cell>
               </Table.Row>
             ))
           }
