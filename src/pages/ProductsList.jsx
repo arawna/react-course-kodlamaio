@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Icon, Label, Menu, Table, Button } from "semantic-ui-react";
+import { Icon, Menu, Table, Button } from "semantic-ui-react";
 import ProductService from "../services/productService";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../store/actions/cartActions";
